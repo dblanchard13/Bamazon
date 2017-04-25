@@ -15,19 +15,34 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("connected as id " + connection.threadId);
+ // console.log("connected as id " + connection.threadId);
+ displayItems();
 });
 
-inquirer.prompt("Enter the ID of the item you want to buy").then(function (answers) {
-    // Use user feedback for... whatever!! 
-});
+var askItem = function() {
+	inquirer.prompt([{
+		name: "id",
+		type: "input",
+		message: "Enter the ID of the item you want to buy?"
+	},
+	{
+		name: "quantity",
+		type: "input",
+		message: "How many do you want to buy?"
+	}]).then(function(answer) {
+		var query =
+		console.log(answer);
+  })
+}
 
-var showProducts = function() {
-  var query = "SELECT ";
-  connection.query(query, function(err, res) {
-    for (var i = 0; i < res.length; i++) {
-      console.log(res[i].artist);
-    }
-    runSearch();
-  });
-};
+var displayItems = function() {
+	var query = "SELECT item_id,product_name,department_name,price,stock_quantity from products;";
+    connection.query(query, function(err, res) {
+    	if (err) {
+    		console.log(err);
+    		return
+    	}
+    	console.log(res);
+    	askItem();
+    })
+}
